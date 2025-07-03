@@ -4,7 +4,6 @@ using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 using PokemonTrainer.Models;
 using PokemonTrainer.Services;
-using System.Threading.Tasks;
 
 namespace PokemonTrainer.Functions;
 
