@@ -11,11 +11,11 @@ public record Pokemon
     public string Name { get; set; }
 
     [JsonPropertyName("height")]
-    public int Height { get; set; }
+    public int? Height { get; set; }
 
     [JsonPropertyName("weight")]
-    public int Weight { get; set; }
+    public int? Weight { get; set; }
 
     [JsonPropertyName("types")]
-    public List<PokemonType> Types { get; set; }
+    public List<PokemonType>? Types { get; set; }
 }

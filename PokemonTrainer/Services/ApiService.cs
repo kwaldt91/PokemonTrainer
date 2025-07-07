@@ -45,6 +45,10 @@ public class ApiService
             if (responseData != null)
             {
                 var pokemon = JsonSerializer.Deserialize<Pokemon>(responseData);
+                //for uncaught pokemon, set properties to null
+                pokemon.Height = null;
+                pokemon.Weight = null;
+                pokemon.Types = null;
                 return pokemon;
             }
         }
