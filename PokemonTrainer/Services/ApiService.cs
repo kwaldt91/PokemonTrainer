@@ -34,4 +34,20 @@ public class ApiService
 
         return null;
     }
+
+    public async Task<Pokemon> GetPokemonByIDAsync(int id)
+    {
+        var url = $"{_httpClient.BaseAddress}{id}";
+        var response = await _httpClient.GetAsync(url);
+        if (response.IsSuccessStatusCode)
+        {
+            var responseData = await response.Content.ReadAsStringAsync();
+            if (responseData != null)
+            {
+                var pokemon = JsonSerializer.Deserialize<Pokemon>(responseData);
+                return pokemon;
+            }
+        }
+        return null;
+    }
 }
