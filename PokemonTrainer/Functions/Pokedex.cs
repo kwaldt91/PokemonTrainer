@@ -19,7 +19,7 @@ namespace PokemonTrainer.Functions
 
         [Function("ResearchPokemon")]
         public async Task<IActionResult> Run(
-    [HttpTrigger(AuthorizationLevel.Function, "post", Route = "pokemon/research/{id}")] HttpRequest req,int id)
+    [HttpTrigger(AuthorizationLevel.Function, "get", Route = "pokemon/research/{id}")] HttpRequest req,int id)
         {
             try
             {
