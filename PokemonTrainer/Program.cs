@@ -1,3 +1,4 @@
+using Azure.Data.Tables;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Builder;
 using Microsoft.Extensions.Configuration;
@@ -21,5 +22,14 @@ builder.Services.AddHttpClient("PokemonApiClient", client =>
 });
 
 builder.Services.AddSingleton<ApiService>();
+
+builder.Services.AddSingleton(provider =>
+{
+    var connectionString = configuration["AzureWebJobsStorage"];
+    var tableName = configuration["TableName"];
+    return new TableClient(connectionString, tableName);
+});
+
+builder.Services.AddSingleton<TableServices>();
 
 builder.Build().Run();

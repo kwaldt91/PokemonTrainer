@@ -15,7 +15,7 @@ public class ApiService
     public async Task<Pokemon> GetRandomPokemonAsync()
     {
         Random random = new Random();
-        int randomNumber = random.Next(1, 1303);
+        int randomNumber = random.Next(1, 1026);
 
         var url = $"{_httpClient.BaseAddress}{randomNumber}";
         var response = await _httpClient.GetAsync(url);

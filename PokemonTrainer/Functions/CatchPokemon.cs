@@ -1,3 +1,4 @@
+using Azure.Data.Tables;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
@@ -7,10 +8,11 @@ using PokemonTrainer.Services;
 
 namespace PokemonTrainer.Functions;
 
-public class CatchPokemon(ILogger<CatchPokemon> logger, ApiService apiService)
+public class CatchPokemon(ILogger<CatchPokemon> logger, ApiService apiService, TableServices tableServices)
 {
     private readonly ILogger<CatchPokemon> _logger = logger;
     private readonly ApiService _apiService = apiService;
+    private readonly TableServices _tableServices = tableServices;
 
     [Function("CatchPokemon")]
     public async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Function, "post", Route = "pokemon/catch")] HttpRequest req)
@@ -25,6 +27,7 @@ public class CatchPokemon(ILogger<CatchPokemon> logger, ApiService apiService)
                 return new NotFoundResult();
             }
 
+            _tableServices.AddPokemonAsync(pokemon);
             return new OkObjectResult(pokemon);
         }
         catch (Exception ex)
