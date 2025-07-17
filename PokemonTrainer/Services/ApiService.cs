@@ -12,10 +12,13 @@ public class ApiService
         _httpClientFactory = httpClientFactory;
         _httpClient = _httpClientFactory.CreateClient("PokemonApiClient");
     }
-    public async Task<Pokemon> GetRandomPokemonAsync()
+    public async Task<Pokemon> GetRandomPokemonAsync(bool includeClassic)
     {
+        int randomNumber;
         Random random = new Random();
-        int randomNumber = random.Next(1, 1026);
+        int endRange = includeClassic ? 152 : 1026; // Classic Pokemon range from 1 to 151, others from 1 to 1025
+
+        randomNumber = random.Next(1, endRange); // Generate a random number between 1 and endRange
 
         var url = $"{_httpClient.BaseAddress}{randomNumber}";
         var response = await _httpClient.GetAsync(url);

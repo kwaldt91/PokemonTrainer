@@ -18,9 +18,16 @@ public class CatchPokemon(ILogger<CatchPokemon> logger, ApiService apiService, T
     [Function("CatchPokemon")]
     public async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Function, "post", Route = "pokemon/catch")] HttpRequest req)
     {
+        var includeClassicParam = req.Query["classic"].ToString();
+        bool includeClassic = false;
+
+        if (!string.IsNullOrEmpty(includeClassicParam))
+        {
+            bool.TryParse(includeClassicParam, out includeClassic);
+        }
         try
         {
-            Pokemon pokemon = await _apiService.GetRandomPokemonAsync();
+            Pokemon pokemon = await _apiService.GetRandomPokemonAsync(includeClassic);
             if (pokemon == null) 
             {
                 _logger.LogWarning("No Pokemon found or API call failed.");
