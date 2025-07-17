@@ -11,11 +11,19 @@ public class Probability(ILogger<Probability> logger)
     public async Task<bool> CalculateCatchChance(Pokemon pokemon)
     {
         // Calculate the catch chance based on the total stats of the Pokemon
+        float a = 0.03f; // Example value, adjust for difficulty
+        float b = 450f;  // Example value, adjust for balance
+
         int pokeStatTotal = pokemon.Stats.Sum(stat => stat.BaseStat);
-        float catchChance = (1125 - pokeStatTotal) / 10f; // percent is a little high, test and if catching good ones too often set a number like 562 (half of 1125). If under keep chance, if over /2
-        
+        float catchRateNew = 100f / (1f + (float)Math.Exp(a * (pokeStatTotal - b)));
+
+        if(catchRateNew < 1.00f)
+        {
+            catchRateNew = 1; //min catch rate
+        }
+
         int attemptsLeft = 3;
-        _logger.LogInformation($"You have a {catchChance}% chance to catch them - attepmts left = {attemptsLeft}");
+        _logger.LogInformation($"You have a {catchRateNew}% chance to catch them - attepmts left = {attemptsLeft}");
 
         await Task.Delay(timeDelay);
 
@@ -24,7 +32,7 @@ public class Probability(ILogger<Probability> logger)
             int randomChance = new Random().Next(1, 101);
             _logger.LogInformation($"Attempting to catch {pokemon.Name}");
             await Task.Delay(timeDelay);
-            if (randomChance <= catchChance)
+            if (randomChance <= catchRateNew)
             {
                 _logger.LogInformation($"You caught {pokemon.Name}!");
                 return true;

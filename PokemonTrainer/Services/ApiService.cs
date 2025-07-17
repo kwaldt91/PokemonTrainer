@@ -57,4 +57,24 @@ public class ApiService
         }
         return null;
     }
+
+    public async Task<Pokemon> TestingOnlySelectPokemonAsync(int setID)//testing purposes only, to select a specific pokemon by ID
+    {
+        var url = $"{_httpClient.BaseAddress}{setID}";
+        var response = await _httpClient.GetAsync(url);
+
+        if (response.IsSuccessStatusCode)
+        {
+            var responseData = response.Content.ReadAsStringAsync();
+
+            if (responseData != null)
+            {
+                var pokemon = JsonSerializer.Deserialize<Pokemon>(await responseData);
+
+                return pokemon;
+            }
+        }
+
+        return null;
+    }
 }
