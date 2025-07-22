@@ -34,4 +34,49 @@ public class TableServices
 
         await _tableClient.AddEntityAsync(pokeColum);
     }
+
+    public async Task<List<Pokemon>> RetriveAllPokemon()
+    {
+        List<Pokemon> pokemonList = new List<Pokemon>();
+
+        var query = _tableClient.QueryAsync<PokeColum>();
+        
+        await foreach (var entity in query)
+        {
+            Pokemon pokemon = new Pokemon
+            {
+                Id = entity.Id,
+                Name = entity.Name,
+                Height = entity.Height,
+                Weight = entity.Weight,
+                Types = new List<PokemonType>
+                {
+                    new PokemonType { 
+                        Type = new Models.Type
+                        {
+                            Name = entity.Type1
+                        }
+                    }
+                }
+            };
+
+            if (entity.Type2 != null)
+            {
+                pokemon.Types.Add(
+
+                    new PokemonType
+                    {
+                        Type = new Models.Type
+                        {
+                            Name = entity.Type2
+                        }
+                    }
+                );
+            }
+
+            pokemonList.Add(pokemon);
+        }
+
+        return pokemonList;
+    }
 }

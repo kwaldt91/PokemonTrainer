@@ -7,11 +7,13 @@ public class ApiService
 {
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly HttpClient _httpClient;
+
     public ApiService(IHttpClientFactory httpClientFactory)
     {
         _httpClientFactory = httpClientFactory;
         _httpClient = _httpClientFactory.CreateClient("PokemonApiClient");
     }
+
     public async Task<Pokemon> GetRandomPokemonAsync(bool includeClassic)
     {
         int randomNumber;
