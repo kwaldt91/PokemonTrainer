@@ -34,6 +34,7 @@ public class POBox(ILogger<CatchPokemon> logger, TableServices tableServices)
             {
                 _logger.LogInformation($"Found {pokeList.Count} Pokemon in the PO Box.");
             }
+
             foreach (var pokemon in pokeList)
             {
                 await Task.Delay(1000);
@@ -46,6 +47,7 @@ public class POBox(ILogger<CatchPokemon> logger, TableServices tableServices)
                     _logger.LogInformation($"Pokemon found: {pokemon.Name} and has types : {pokemon.Types[0].Type.Name} and : {pokemon.Types[1].Type.Name}");
                 }
             }
+
             return new OkObjectResult(pokeList);
         }
         catch (Exception ex)

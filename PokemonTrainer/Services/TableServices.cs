@@ -76,6 +76,7 @@ public class TableServices
 
             pokemonList.Add(pokemon);
         }
+
         return pokemonList;
     }
 }
