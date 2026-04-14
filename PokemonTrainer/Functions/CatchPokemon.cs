@@ -19,6 +19,7 @@ public class CatchPokemon(ILogger<CatchPokemon> logger, ApiService apiService, T
     public async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Function, "post", Route = "pokemon/catch")] HttpRequest req)
     {
         //test change
+        //another test change
         var includeClassicParam = req.Query["classic"].ToString();
         bool includeClassic = false;
 
