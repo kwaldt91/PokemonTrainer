@@ -4,17 +4,17 @@ on:
   push:
     branches: [ "main" ]
 
+permissions:
+  contents: read
+
 env:
   DOTNET_VERSION: "8.0.x"
   PROJECT_PATH: "PokemonTrainer/PokemonTrainer.csproj"
   PUBLISH_PATH: "./publish_output"
 
 jobs:
-  build-test-deploy:
+  build:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      id-token: write
 
     steps:
       - name: Checkout
@@ -31,11 +31,62 @@ jobs:
       - name: Build
         run: dotnet build --no-restore --configuration Release
 
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-build
+          path: |
+            **/bin/Release/**
+
+  test:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: release-build
+          path: .
+
       - name: Test
         run: dotnet test --no-build --configuration Release --verbosity normal
 
+  deploy:
+    runs-on: ubuntu-latest
+    needs: test
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: release-build
+          path: .
+
+      - name: Restore dependencies
+        run: dotnet restore
+
       - name: Publish Function App
-        run: dotnet publish ${{ env.PROJECT_PATH }} --no-restore --configuration Release --output ${{ env.PUBLISH_PATH }}
+        run: dotnet publish ${{ env.PROJECT_PATH }} --no-build --configuration Release --output ${{ env.PUBLISH_PATH }}
 
       - name: Login to Azure
         uses: azure/login@v2
