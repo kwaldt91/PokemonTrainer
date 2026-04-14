@@ -4,6 +4,7 @@ namespace PokemonTrainer.Models;
 
 public record Pokemon
 {
+    //test
     [JsonPropertyName("id")]
     public int Id { get; set; }
 
