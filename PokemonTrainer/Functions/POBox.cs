@@ -24,6 +24,7 @@ public class POBox(ILogger<CatchPokemon> logger, TableServices tableServices)
     {
         try
         {
+            //test
             var pokeList = await _tableServices.RetriveAllPokemon();
 
             if (pokeList == null)
